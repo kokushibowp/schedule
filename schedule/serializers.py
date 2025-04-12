@@ -4,7 +4,7 @@ from .models import Lesson, Room
 class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
-        fields = ['id', 'numclassroom', 'NFC', 'numpostfix']
+        fields = ['id', 'roomNumber', 'NFC', 'numpostfix']
 
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
