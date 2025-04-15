@@ -19,7 +19,7 @@ def find_lessons(room_id):
     time = localtime().time()
     if (datetime.datetime.now().month >= 2) and (datetime.datetime.now().day >=7):
         numofday = ((datetime.datetime.now().date() - double_semester_starting_point).days + 1) % 14
-    lessons_list = LessonSerializer(Lesson.objects.filter(foreign_id = room_id, time1__lt = time, time2__gt = time, numofday = numofday), many=True)
+    lessons_list = LessonSerializer(Lesson.objects.filter(foreign_id = room_id, startTime__lt = time, endTime__gt = time, numofday = numofday), many=True)
     return lessons_list.data
 
 def create_room_list(all_id):
@@ -32,18 +32,19 @@ def room_detail(request):
     #objectsfromNFC = Room.objects.filter(NFC = entering_NFC)
     enteringNFC = request.GET.get('tagUid')
     print(enteringNFC)
-    objectfromNFC = Room.objects.filter(NFC = enteringNFC)[0]
+    objectfromNFC = Room.objects.filter(NFC = enteringNFC).first()
     #lesson = Lesson.objects.filter(foreign_id = objectsfromNFC.id)
     all_id = list(Room.objects.all().values_list('id', flat=True)) 
     serializer = RoomSerializer(objectfromNFC, many=False)
     roomData = serializer.data
     
     time = localtime().time()
+    if (datetime.datetime.now().month >= 2) and (datetime.datetime.now().day >=7):
+        numofday = ((datetime.datetime.now().date() - double_semester_starting_point).days + 1) % 14
     try:
-        lesson = Lesson.objects.filter(foreign_id=objectfromNFC, startTime__lt = time, endTime__gt = time)[0]
+        lesson = Lesson.objects.filter(foreign_id=objectfromNFC, startTime__lt = time, endTime__gt = time, numofday = numofday).first()
     except:
         return HttpResponse(f"404")
-    print(type(lesson))
 
 
     lessonSerializer = LessonSerializer(lesson, many=False)

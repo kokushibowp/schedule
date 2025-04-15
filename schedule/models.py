@@ -2,6 +2,8 @@ from django.db import models
 
 import datetime
 
+from django.core.validators import MaxValueValidator, MinValueValidator
+
 class Room(models.Model):
     id = models.IntegerField(primary_key=True)
     roomNumber = models.IntegerField(default=0)
@@ -14,9 +16,9 @@ class Lesson(models.Model):
     subject = models.CharField(max_length=240, default="none")
     lecturer = models.CharField(max_length=120, default="none")
     #numclassroom = models.IntegerField(default=0)
-    startTime = models.TimeField(default=datetime.time(0, 0, 30))
-    endTime = models.TimeField(default=datetime.time(0, 0, 30)) 
-    numofday = models.IntegerField(default = 0)
+    startTime = models.TimeField(default=datetime.time(0, 0, 0))
+    endTime = models.TimeField(default=datetime.time(0, 23, 59)) 
+    numofday = models.IntegerField(default = 0, validators=[MaxValueValidator(14), MinValueValidator(1)])
     #weekIsFirst = models.BooleanField(default=True)
 
     def __str__(self):
